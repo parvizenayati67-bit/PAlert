@@ -50,3 +50,5 @@ function generateSignals() {
 // refresh signals every 15 seconds
 setInterval(generateSignals, 15000);
 window.onload = generateSignals;
+// Manual refresh via button
+document.getElementById("testButton").addEventListener("click", generateSignals);
