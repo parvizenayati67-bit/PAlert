@@ -3,62 +3,63 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PAlert – Signal Tracker</title>
+  <title>PAlert</title>
   <style>
     body {
-      background: #0d1117;
-      color: #e6edf3;
-      font-family: "Segoe UI", sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      background-color: #0d1117;
+      color: #fff;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      margin: 0;
       padding: 20px;
     }
+
     h1 {
       color: #00ffb3;
-      font-size: 2em;
       margin-bottom: 10px;
     }
-    #sound-btn {
-      margin: 10px;
-      padding: 10px 20px;
+
+    h3 {
+      font-weight: normal;
+      color: #ccc;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    #coins {
+      margin-top: 20px;
+    }
+
+    .footer {
+      margin-top: 40px;
+      color: #888;
+      font-size: 14px;
+    }
+
+    button, select {
+      font-family: inherit;
+    }
+
+    select {
+      background: #0d1117;
+      color: #fff;
+      border: 1px solid #00ffb3;
       border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 14px;
+    }
+
+    button {
       border: none;
-      background: #00ffb3;
-      color: #000;
+      border-radius: 8px;
+      padding: 8px 16px;
       font-weight: bold;
       cursor: pointer;
       transition: 0.2s;
     }
-    #sound-btn:hover {
-      background: #00e6a7;
-      transform: scale(1.05);
-    }
-    .coin-card {
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 12px;
-      padding: 15px;
-      margin: 10px;
-      width: 260px;
-      box-shadow: 0 0 12px rgba(0,255,179,0.2);
-      text-align: center;
-      transition: 0.2s ease;
-    }
-    .coin-card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px rgba(0,255,179,0.4);
-    }
-    #coins {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      max-width: 900px;
-    }
-    .footer {
-      margin-top: 25px;
-      font-size: 0.9em;
-      color: #8b949e;
+
+    button:hover {
+      opacity: 0.8;
     }
   </style>
 </head>
@@ -66,15 +67,21 @@
   <h1>📈 PAlert</h1>
   <h3>Automated Trade Signal Alerts</h3>
 
-  <button id="sound-btn" onclick="toggleSound()">🔔 Sound: ON</button>
+  <!-- 🎵 Sound Settings -->
+  <div style="display:flex; align-items:center; gap:10px; justify-content:center; margin:10px;">
+    <button id="soundToggle" onclick="toggleSound()" style="
+      background:#00ffb3;
+      color:#0d1117;
+    ">🔊 Sound: ON</button>
 
-  <select id="sound-select" onchange="changeSound()" style="margin: 10px; padding: 10px; border-radius: 8px; background: #161b22; color: #e6edf3; border: 1px solid #30363d;">
-  <option value="beep">Beep Short (Default)</option>
-  <option value="polaris">Polaris (Samsung)</option>
-  <option value="ping">Soft Ping</option>
-  <option value="classic">Classic Bell</option>
-  <option value="alert">Alert Tone</option>
-</select>
+    <label for="soundSelect" style="color:#fff; font-size:14px;">Alarm:</label>
+    <select id="soundSelect" onchange="changeSound()">
+      <option value="soft">Soft Ping</option>
+      <option value="classic">Classic Bell</option>
+      <option value="beep">Beep</option>
+      <option value="mute">Silent</option>
+    </select>
+  </div>
 
   <div id="coins"></div>
 
