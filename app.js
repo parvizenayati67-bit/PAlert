@@ -7,6 +7,12 @@ const takeProfit = 0.48;
 
 // 🔔 کنترل صدا
 let soundEnabled = true;
+// 🔊 انتخاب صدای فعلی
+let selectedSound = "beep";
+
+function changeSound() {
+  selectedSound = document.getElementById("sound-select").value;
+}
 
 function toggleSound() {
   soundEnabled = !soundEnabled;
@@ -15,11 +21,31 @@ function toggleSound() {
 
 // 🎵 پخش آلارم در صورت فعال بودن
 function playAlertSound() {
-  if (soundEnabled) {
-    const audio = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
-    audio.play();
+  if (!soundEnabled) return;
+
+  let soundUrl;
+  switch (selectedSound) {
+    case "beep":
+      soundUrl = "https://actions.google.com/sounds/v1/alarms/beep_short.ogg";
+      break;
+    case "polaris":
+      soundUrl = "https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg";
+      break;
+    case "ping":
+      soundUrl = "https://actions.google.com/sounds/v1/alarms/ping.ogg";
+      break;
+    case "classic":
+      soundUrl = "https://actions.google.com/sounds/v1/alarms/phone_alerts_and_rings.ogg";
+      break;
+    case "alert":
+      soundUrl = "https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg";
+      break;
   }
+
+  const audio = new Audio(soundUrl);
+  audio.play();
 }
+
 
 // 🎯 تولید سیگنال تصادفی برای تست
 function randomSignal() {
