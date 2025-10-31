@@ -68,6 +68,14 @@
 
   <button id="sound-btn" onclick="toggleSound()">🔔 Sound: ON</button>
 
+  <select id="sound-select" onchange="changeSound()" style="margin: 10px; padding: 10px; border-radius: 8px; background: #161b22; color: #e6edf3; border: 1px solid #30363d;">
+  <option value="beep">Beep Short (Default)</option>
+  <option value="polaris">Polaris (Samsung)</option>
+  <option value="ping">Soft Ping</option>
+  <option value="classic">Classic Bell</option>
+  <option value="alert">Alert Tone</option>
+</select>
+
   <div id="coins"></div>
 
   <div class="footer">
