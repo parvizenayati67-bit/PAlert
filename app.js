@@ -88,12 +88,59 @@ function generateSignals() {
   audio.loop = true;
   audio.play();
 }
+// === Sound toggle ===
+let soundEnabled = true;
 
-// 🔁 رفرش سیگنال‌ها هر ۱۵ ثانیه
-setInterval(generateSignals, 15000);
-
-// 🚀 اجرای اولیه
-window.onload = function () {
-  buildCoinSelector();
-  generateSignals();
+const soundButton = document.createElement("button");
+soundButton.textContent = "🔔 Sound: ON";
+soundButton.style.background = "#00ffb3";
+soundButton.style.color = "#0d1117";
+soundButton.style.border = "none";
+soundButton.style.padding = "8px 16px";
+soundButton.style.borderRadius = "8px";
+soundButton.style.cursor = "pointer";
+soundButton.style.marginBottom = "10px";
+soundButton.onclick = () => {
+  soundEnabled = !soundEnabled;
+  soundButton.textContent = soundEnabled ? "🔔 Sound: ON" : "🔕 Sound: OFF";
+  soundButton.style.background = soundEnabled ? "#00ffb3" : "#555";
 };
+document.body.insertBefore(soundButton, document.getElementById("coins"));
+
+// === Refresh signals ===
+function playAlert() {
+  if (soundEnabled) {
+    const audio = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+    audio.play();
+  }
+}
+
+function generateSignals() {
+  const container = document.getElementById("coins");
+  container.innerHTML = "";
+
+  coins.forEach((coin) => {
+    const signal = randomSignal();
+    const leverage = randomLeverage();
+    const entry = randomEntryPrice();
+
+    const card = document.createElement("div");
+    card.className = "coin-card";
+
+    card.innerHTML = `
+      <h2>${coin}</h2>
+      <p class="signal">Signal: <strong style="color:${signal === "BUY" ? "#00ffb3" : "#ff6b6b"}">${signal}</strong></p>
+      <p>Entry: ${entry}</p>
+      <p>Leverage: ${leverage}x</p>
+      <p>Stop Loss: -${(stopLoss * 100).toFixed(0)}%</p>
+      <p>Take Profit: +${(takeProfit * 100).toFixed(0)}%</p>
+    `;
+
+    container.appendChild(card);
+  });
+
+  playAlert();
+}
+
+setInterval(generateSignals, 15000);
+window.onload = generateSignals;
