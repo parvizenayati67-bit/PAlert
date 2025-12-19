@@ -1,7 +1,3 @@
-// ==========================
-// PAlert – Stable Version
-// ==========================
-
 let alertEnabled = true;
 
 const STOP_PERCENT = 0.28;
@@ -13,58 +9,42 @@ const coins = [
   "NEO", "ICP"
 ];
 
-// ==========================
-// Helpers
-// ==========================
 function randomSignal() {
   return Math.random() > 0.5 ? "BUY" : "SELL";
 }
 
-function randomPrice() {
-  return (Math.random() * 50000 + 500).toFixed(2);
+function randomEntry() {
+  return (Math.random() * 40000 + 1000);
 }
 
-function calculateLeverage(entry, stop) {
+function calcLeverage(entry, stop) {
   const risk = Math.abs((entry - stop) / entry);
   return Math.min(100, Math.max(1, Math.round(STOP_PERCENT / risk)));
 }
 
-// ==========================
-// Sound
-// ==========================
 function playAlertSound() {
   if (!alertEnabled) return;
-
-  const audio = new Audio(
-    "https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"
-  );
+  const audio = new Audio("https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg");
   audio.play();
 }
 
-// ==========================
-// Main
-// ==========================
 function generateSignals() {
   const container = document.getElementById("coins");
-  if (!container) return;
-
   container.innerHTML = "";
 
   coins.forEach((coin) => {
     const signal = randomSignal();
-    const entry = parseFloat(randomPrice());
+    const entry = randomEntry();
 
-    const stop =
-      signal === "BUY"
-        ? entry * (1 - STOP_PERCENT)
-        : entry * (1 + STOP_PERCENT);
+    const stop = signal === "BUY"
+      ? entry * (1 - STOP_PERCENT)
+      : entry * (1 + STOP_PERCENT);
 
-    const tp =
-      signal === "BUY"
-        ? entry * (1 + TAKE_PERCENT)
-        : entry * (1 - TAKE_PERCENT);
+    const tp = signal === "BUY"
+      ? entry * (1 + TAKE_PERCENT)
+      : entry * (1 - TAKE_PERCENT);
 
-    const leverage = calculateLeverage(entry, stop);
+    const leverage = calcLeverage(entry, stop);
 
     const card = document.createElement("div");
     card.className = "coin-card";
@@ -73,8 +53,8 @@ function generateSignals() {
       <h3>${coin}</h3>
       <p>Signal: <strong class="${signal === "BUY" ? "buy" : "sell"}">${signal}</strong></p>
       <p>Entry: ${entry.toFixed(2)}</p>
-      <p>Stop Loss: ${stop.toFixed(2)}</p>
-      <p>Take Profit: ${tp.toFixed(2)}</p>
+      <p>Stop: ${stop.toFixed(2)}</p>
+      <p>Target: ${tp.toFixed(2)}</p>
       <p>Leverage: ${leverage}x</p>
     `;
 
@@ -84,16 +64,12 @@ function generateSignals() {
   playAlertSound();
 }
 
-// ==========================
-// Toggle Button
-// ==========================
-document.getElementById("soundToggle").addEventListener("click", () => {
+document.getElementById("soundToggle").onclick = () => {
   alertEnabled = !alertEnabled;
   document.getElementById("soundToggle").innerText =
     alertEnabled ? "🔔 Sound: ON" : "🔕 Sound: OFF";
-});
+};
 
-// ==========================
-// Init (با تأخیر امن)
-// ==========================
-setTimeout(generateSignals, 300);
+window.onload = () => {
+  generateSignals();
+};
