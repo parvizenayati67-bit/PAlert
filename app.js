@@ -1,93 +1,105 @@
-// === PAlert by Parviz 😎 ===
+// ===============================
+// PAlert – Final Logic
+// ===============================
 
-// لیست ارزها
-const coins = ["BTC", "ETH", "SOL", "DOT", "ADA", "AVAX", "XRP", "PEPE", "DOGE", "ATOM", "GALA", "ARB", "DYDX"];
-const stopLoss = 0.28;
-const takeProfit = 0.48;
+const coins = [
+  "BTC", "ETH", "SOL", "DOT", "ADA",
+  "AVAX", "XRP", "PEPE", "DOGE",
+  "ATOM", "GALA", "ARB", "DYDX",
+  "ICP", "NEO"
+];
 
-// 🔔 کنترل صدا
-let soundEnabled = true;
-// 🔊 انتخاب صدای فعلی
-let selectedSound = "beep";
+const MAX_SAME_DIRECTION = 6;
+const STOP_LOSS = 0.28;   // 28%
+const TAKE_PROFIT = 0.48; // 48%
 
-function changeSound() {
-  selectedSound = document.getElementById("sound-select").value;
+let alarmEnabled = false;
+let activeLongs = 0;
+let activeShorts = 0;
+
+// -------------------------------
+// UI
+// -------------------------------
+const alarmBtn = document.getElementById("alarmBtn");
+alarmBtn.onclick = () => {
+  alarmEnabled = !alarmEnabled;
+  alarmBtn.textContent = alarmEnabled ? "Alarm ON" : "Alarm OFF";
+  alarmBtn.className = alarmEnabled ? "on" : "off";
+};
+
+function updateCounters() {
+  document.getElementById("longCount").textContent = activeLongs;
+  document.getElementById("shortCount").textContent = activeShorts;
 }
 
-function toggleSound() {
-  soundEnabled = !soundEnabled;
-  document.getElementById("sound-btn").textContent = soundEnabled ? "🔔 Sound: ON" : "🔕 Sound: OFF";
-}
-
-// 🎵 پخش آلارم در صورت فعال بودن
-function playAlertSound() {
-  if (!soundEnabled) return;
-
-  let soundUrl;
-  switch (selectedSound) {
-    case "beep":
-      soundUrl = "https://actions.google.com/sounds/v1/alarms/beep_short.ogg";
-      break;
-    case "polaris":
-      soundUrl = "https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg";
-      break;
-    case "ping":
-      soundUrl = "https://actions.google.com/sounds/v1/alarms/ping.ogg";
-      break;
-    case "classic":
-      soundUrl = "https://actions.google.com/sounds/v1/alarms/phone_alerts_and_rings.ogg";
-      break;
-    case "alert":
-      soundUrl = "https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg";
-      break;
-  }
-
-  const audio = new Audio(soundUrl);
-  audio.play();
-}
-
-
-// 🎯 تولید سیگنال تصادفی برای تست
-function randomSignal() {
+// -------------------------------
+// Helpers (temporary mock)
+// -------------------------------
+function getSignalFromIndicator() {
   return Math.random() > 0.5 ? "BUY" : "SELL";
 }
 
-function randomLeverage() {
-  return Math.floor(Math.random() * 50) + 1; // 1 تا 50
+function getEntryPrice() {
+  return (Math.random() * 50000 + 100).toFixed(2);
 }
 
-function randomEntryPrice() {
-  return (Math.random() * 1000 + 100).toFixed(2); // بین 100 تا 1100
+function calculateLeverage() {
+  return Math.floor((TAKE_PROFIT / STOP_LOSS) * 10);
 }
 
-// 📊 ساخت کارت‌ها
+function playAlarm() {
+  if (!alarmEnabled) return;
+  const audio = new Audio(
+    "https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+  );
+  audio.play();
+}
+
+// -------------------------------
+// Main
+// -------------------------------
 function generateSignals() {
   const container = document.getElementById("coins");
   container.innerHTML = "";
 
+  activeLongs = 0;
+  activeShorts = 0;
+
   coins.forEach((coin) => {
-    const signal = randomSignal();
-    const leverage = randomLeverage();
-    const entry = randomEntryPrice();
+    const signal = getSignalFromIndicator();
+
+    // Direction filter
+    if (signal === "BUY" && activeLongs >= MAX_SAME_DIRECTION) return;
+    if (signal === "SELL" && activeShorts >= MAX_SAME_DIRECTION) return;
+
+    const entry = getEntryPrice();
+    const leverage = calculateLeverage();
+
+    if (signal === "BUY") activeLongs++;
+    if (signal === "SELL") activeShorts++;
 
     const card = document.createElement("div");
     card.className = "coin-card";
+
     card.innerHTML = `
-      <h2>${coin}</h2>
-      <p>Signal: <strong style="color:${signal === "BUY" ? "#00ffb3" : "#ff6b6b"}">${signal}</strong></p>
+      <h3>${coin}</h3>
+      <p>Signal:
+        <strong class="${signal === "BUY" ? "buy" : "sell"}">
+          ${signal}
+        </strong>
+      </p>
       <p>Entry: ${entry}</p>
       <p>Leverage: ${leverage}x</p>
-      <p>Stop Loss: -${(stopLoss * 100).toFixed(0)}%</p>
-      <p>Take Profit: +${(takeProfit * 100).toFixed(0)}%</p>
+      <p>Stop Loss: -28%</p>
+      <p>Take Profit: +48%</p>
     `;
 
     container.appendChild(card);
   });
 
-  playAlertSound();
+  updateCounters();
+  playAlarm();
 }
 
-// 🚀 اجرای اولیه فقط یک‌بار
-window.onload = function () {
-  generateSignals();
-};
+// اجرای دستی فقط وقتی خودت خواستی
+generateSignals();
