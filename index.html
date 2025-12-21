@@ -2,16 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <title>PAlert – Signal Alert Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PAlert</title>
 
   <style>
     body {
+      margin: 0;
+      padding: 20px;
       background: #0d1117;
       color: #e6edf3;
-      font-family: Arial, sans-serif;
+      font-family: "Segoe UI", sans-serif;
       text-align: center;
-      padding: 20px;
     }
 
     h1 {
@@ -19,59 +20,35 @@
       margin-bottom: 5px;
     }
 
-    #soundToggle {
-      margin: 20px auto;
-      padding: 12px 20px;
+    h3 {
+      color: #8b949e;
+      margin-top: 0;
+    }
+
+    button {
+      background: #161b22;
+      border: 1px solid #30363d;
+      color: #e6edf3;
+      padding: 14px 20px;
       font-size: 16px;
-      border-radius: 12px;
-      border: none;
+      border-radius: 14px;
       cursor: pointer;
-      background: #21262d;
-      color: #fff;
+      margin: 20px 0;
+      width: 220px;
+    }
+
+    button:hover {
+      background: #1f2630;
     }
 
     #coins {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 15px;
-      margin-top: 25px;
+      gap: 14px;
+      margin-top: 20px;
     }
 
     .coin-card {
       background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 14px;
-      padding: 15px;
-      width: 260px;
-      box-shadow: 0 0 10px rgba(0,255,179,0.15);
-    }
-
-    .buy { color: #00ffb3; }
-    .sell { color: #ff6b6b; }
-
-    .footer {
-      margin-top: 30px;
-      color: #8b949e;
-      font-size: 14px;
-    }
-  </style>
-</head>
-
-<body>
-
-  <h1>📈 PAlert</h1>
-  <p>Signal Alert Dashboard</p>
-
-  <button id="soundToggle">🔔 Sound: ON</button>
-
-  <!-- ⬇⬇⬇ این خیلی مهمه -->
-  <div id="coins"></div>
-
-  <div class="footer">
-    Made with ❤️ by Parviz
-  </div>
-
-  <script src="app.js"></script>
-</body>
-</html>
+      border: 1px solid #
