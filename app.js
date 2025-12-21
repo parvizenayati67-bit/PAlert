@@ -1,75 +1,109 @@
-let alertEnabled = true;
+// ==========================
+// PAlert – Phase 1 (Stable)
+// ==========================
 
-const STOP_PERCENT = 0.28;
-const TAKE_PERCENT = 0.48;
+// 🔔 تنظیمات آلارم
+let soundEnabled = true;
+let alarmInterval = null;
+let snoozeTimeout = null;
 
+// 🪙 لیست ارزها (آپدیت‌شده)
 const coins = [
-  "BTC", "ETH", "SOL", "DOT", "ADA",
-  "AVAX", "XRP", "PEPE", "DOGE", "ATOM",
-  "NEO", "ICP"
+  "BTC","ETH","SOL","ADA","DOT","AVAX",
+  "XRP","DOGE","ATOM",
+  "GALA","ARB",
+  "UNI","DYDX",
+  "ICP","NEO"
 ];
 
-function randomSignal() {
-  return Math.random() > 0.5 ? "BUY" : "SELL";
+// 📊 تنظیمات استراتژی
+const STOP_PERCENT = 28;
+const TP_PERCENT = 48;
+const RR = 1.7;
+
+// ==========================
+// 🔊 آلارم حرفه‌ای
+// ==========================
+function startAlarm() {
+  if (!soundEnabled) return;
+
+  stopAlarm();
+
+  // 🔔 هر ۱.۵ ثانیه بوق – به مدت ۳۰ ثانیه
+  let count = 0;
+  alarmInterval = setInterval(() => {
+    playBeep();
+    count++;
+    if (count >= 20) { // حدود ۳۰ ثانیه
+      stopAlarm();
+      startSnooze();
+    }
+  }, 1500);
 }
 
-function randomEntry() {
-  return (Math.random() * 40000 + 1000);
+function startSnooze() {
+  if (!soundEnabled) return;
+  snoozeTimeout = setTimeout(() => {
+    startAlarm();
+  }, 5 * 60 * 1000); // ۵ دقیقه
 }
 
-function calcLeverage(entry, stop) {
-  const risk = Math.abs((entry - stop) / entry);
-  return Math.min(100, Math.max(1, Math.round(STOP_PERCENT / risk)));
+function stopAlarm() {
+  clearInterval(alarmInterval);
+  clearTimeout(snoozeTimeout);
 }
 
-function playAlertSound() {
-  if (!alertEnabled) return;
-  const audio = new Audio("https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg");
+function playBeep() {
+  const audio = new Audio(
+    "https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+  );
   audio.play();
 }
 
-function generateSignals() {
+// ==========================
+// 🎛️ دکمه ON / OFF
+// ==========================
+document.getElementById("soundBtn").onclick = () => {
+  soundEnabled = !soundEnabled;
+  document.getElementById("soundBtn").innerText =
+    soundEnabled ? "🔔 Sound: ON" : "🔕 Sound: OFF";
+
+  if (!soundEnabled) stopAlarm();
+};
+
+// ==========================
+// 📦 ساخت کارت‌ها (فعلاً نمایشی)
+// ==========================
+function generateCards() {
   const container = document.getElementById("coins");
   container.innerHTML = "";
 
   coins.forEach((coin) => {
-    const signal = randomSignal();
-    const entry = randomEntry();
-
-    const stop = signal === "BUY"
-      ? entry * (1 - STOP_PERCENT)
-      : entry * (1 + STOP_PERCENT);
-
-    const tp = signal === "BUY"
-      ? entry * (1 + TAKE_PERCENT)
-      : entry * (1 - TAKE_PERCENT);
-
-    const leverage = calcLeverage(entry, stop);
+    const direction = Math.random() > 0.5 ? "LONG" : "SHORT";
+    const entry = (Math.random() * 100 + 10).toFixed(2);
+    const leverage = Math.floor(Math.random() * 20) + 1;
 
     const card = document.createElement("div");
     card.className = "coin-card";
 
     card.innerHTML = `
       <h3>${coin}</h3>
-      <p>Signal: <strong class="${signal === "BUY" ? "buy" : "sell"}">${signal}</strong></p>
-      <p>Entry: ${entry.toFixed(2)}</p>
-      <p>Stop: ${stop.toFixed(2)}</p>
-      <p>Target: ${tp.toFixed(2)}</p>
+      <p class="${direction === "LONG" ? "long" : "short"}">
+        ${direction}
+      </p>
+      <p>Entry: ${entry}</p>
       <p>Leverage: ${leverage}x</p>
+      <p>Stop: -${STOP_PERCENT}%</p>
+      <p>Target: +${TP_PERCENT}%</p>
     `;
 
     container.appendChild(card);
   });
-
-  playAlertSound();
 }
 
-document.getElementById("soundToggle").onclick = () => {
-  alertEnabled = !alertEnabled;
-  document.getElementById("soundToggle").innerText =
-    alertEnabled ? "🔔 Sound: ON" : "🔕 Sound: OFF";
-};
-
+// ==========================
+// 🚀 اجرا
+// ==========================
 window.onload = () => {
-  generateSignals();
+  generateCards();
 };
