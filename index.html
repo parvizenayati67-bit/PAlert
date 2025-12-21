@@ -1,73 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa">
 <head>
   <meta charset="UTF-8" />
-  <title>PAlert – Signal Alert Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PAlert</title>
 
   <style>
     body {
-      margin: 0;
-      padding: 20px;
       background: #0d1117;
       color: #e6edf3;
-      font-family: "Segoe UI", sans-serif;
+      font-family: Segoe UI, sans-serif;
       text-align: center;
+      padding: 15px;
     }
+    h1 { color: #00ffb3; }
 
-    h1 {
-      color: #00ffb3;
-      margin-bottom: 5px;
-    }
-
-    h3 {
-      color: #8b949e;
-      margin-top: 0;
+    .controls {
+      margin: 15px 0;
     }
 
     button {
-      background: #161b22;
-      border: 1px solid #30363d;
-      color: #e6edf3;
-      padding: 14px 20px;
-      font-size: 16px;
-      border-radius: 14px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: none;
+      background: #00ffb3;
+      color: #000;
+      font-weight: bold;
       cursor: pointer;
-      margin: 20px 0;
-      width: 220px;
+      margin: 5px;
     }
 
-    button:hover {
-      background: #1f2630;
+    .coin-toggle {
+      display: inline-block;
+      margin: 5px;
+      padding: 6px 10px;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .coin-toggle.off {
+      opacity: 0.4;
+      text-decoration: line-through;
     }
 
     #coins {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 14px;
       margin-top: 20px;
     }
 
     .coin-card {
       background: #161b22;
       border: 1px solid #30363d;
-      border-radius: 14px;
-      padding: 14px;
+      border-radius: 12px;
+      padding: 12px;
+      margin: 8px;
       width: 240px;
-      box-shadow: 0 0 12px rgba(0,255,179,0.15);
     }
 
-    .long {
-      color: #00ffb3;
-    }
-
-    .short {
-      color: #ff6b6b;
-    }
+    .long { color: #00ffb3; }
+    .short { color: #ff6b6b; }
 
     .footer {
-      margin-top: 40px;
+      margin-top: 25px;
       font-size: 0.85em;
       color: #8b949e;
     }
@@ -75,17 +71,18 @@
 </head>
 
 <body>
-
   <h1>📈 PAlert</h1>
-  <h3>Signal Alert Dashboard</h3>
+  <p>Signal Monitor</p>
 
-  <button id="soundBtn">🔔 Sound: ON</button>
+  <div class="controls">
+    <button id="alarmBtn">🔔 Alarm: ON</button>
+  </div>
+
+  <div id="coinSelector"></div>
 
   <div id="coins"></div>
 
-  <div class="footer">
-    Made with ❤️ by Parviz
-  </div>
+  <div class="footer">Made with ❤️ by Parviz</div>
 
   <script src="app.js"></script>
 </body>
